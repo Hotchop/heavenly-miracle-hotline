@@ -99,6 +99,8 @@ var selected_god = null
 
 # Auto play
 var auto_play_enabled: bool = false
+var auto_play_timer: float = 0.0
+var auto_play_interval: float = 1.0  # Check every second
 
 # Message queue
 var message_queue: Array = []
@@ -135,6 +137,13 @@ func _process(delta):
 
 	for mission in active_missions:
 		mission.update_progress(delta)
+
+	# Handle auto-play
+	if auto_play_enabled:
+		auto_play_timer += delta
+		if auto_play_timer >= auto_play_interval:
+			auto_play_timer = 0.0
+			process_auto_play()
 
 	# Handle message queue
 	process_message_queue(delta)
@@ -332,8 +341,54 @@ func _on_auto_play_toggled(button_pressed: bool):
 	auto_play_enabled = button_pressed
 	if button_pressed:
 		auto_play_button.text = "Auto Play: ON"
+		auto_play_timer = 0.0  # Reset timer when turning on
 	else:
 		auto_play_button.text = "Auto Play: OFF"
+
+func process_auto_play():
+	# Get first available mission
+	if available_missions.size() == 0:
+		return
+
+	var mission = available_missions[0]
+
+	# Find the best available god for this mission
+	var best_god = null
+	var best_stat_value = -1
+
+	for god in all_gods:
+		if god.is_busy:
+			continue
+
+		var god_stat_value = 0
+		match mission.recommended_stat:
+			"strength":
+				god_stat_value = god.strength
+			"speed":
+				god_stat_value = god.speed
+			"intelligence":
+				god_stat_value = god.intelligence
+
+		if god_stat_value > best_stat_value:
+			best_stat_value = god_stat_value
+			best_god = god
+
+	# If we found a suitable god, assign the mission
+	if best_god:
+		# Clear any existing selections
+		if selected_mission:
+			selected_mission.deselect()
+		if selected_god:
+			selected_god.deselect()
+
+		# Set selections
+		selected_mission = mission
+		selected_god = best_god
+
+		# Assign the mission
+		assign_mission()
+
+		print("AUTO-PLAY: Assigned '%s' to mission '%s' (recommended: %s)" % [best_god.god_name, mission.mission_name, mission.recommended_stat])
 
 func _on_help_pressed():
 	# Create help popup
