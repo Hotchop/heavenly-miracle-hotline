@@ -1,5 +1,8 @@
 extends Control
 
+# Preload textures for upgrades
+const UPGRADE_SLATE_TEXTURE = preload("res://assets/upgradesSlates.png")
+
 # Game state
 var faith: int = 1000  # Main currency for everything
 var reputation: float = 2.5
@@ -7,6 +10,10 @@ var god_slots: int = 3
 var max_god_slots: int = 10
 var mission_success_bonus: float = 0.0  # Increases min multiplier
 var faith_multiplier: float = 1.0
+
+# Particle tracking
+var prev_faith: int = 1000
+var prev_reputation: float = 2.5
 
 # Level system
 var current_level: int = 1
@@ -92,12 +99,12 @@ var mission_names: Array = [
 ]
 
 # UI References
-@onready var faith_label = $MarginContainer/VBoxContainer/TopBar/FaithContainer/FaithLabel
-@onready var reputation_label = $MarginContainer/VBoxContainer/TopBar/ReputationContainer/ReputationLabel
-@onready var level_label = $MarginContainer/VBoxContainer/TopBar/LevelLabel
-@onready var missions_container = $MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer/VBoxContainer
+@onready var faith_label = $MarginContainer/VBoxContainer/TopBar/LeftContainer/FaithContainer/FaithLabel
+@onready var reputation_label = $MarginContainer/VBoxContainer/TopBar/RightContainer/ReputationContainer/ReputationLabel
+@onready var level_label = $MarginContainer/VBoxContainer/TopBar/RightContainer/LevelLabel
+@onready var missions_container = $MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer/MarginContainer/VBoxContainer
 @onready var gods_container = $MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/ScrollContainer/HBoxContainer
-@onready var upgrades_container = $MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer/ScrollContainer/VBoxContainer
+@onready var upgrades_container = $MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer
 @onready var auto_play_button = $MarginContainer/VBoxContainer/ButtonsBar/AutoPlayButton
 @onready var help_button = $MarginContainer/VBoxContainer/ButtonsBar/HelpButton
 @onready var sort_str_button = $MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/SortButtons/SortByStrength
@@ -108,6 +115,12 @@ var mission_names: Array = [
 @onready var gods_title_label = $MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/Label
 @onready var volume_slider = $MarginContainer/VBoxContainer/ButtonsBar/VolumeSlider
 @onready var music_player = $MusicPlayer
+@onready var faith_particles = $MarginContainer/VBoxContainer/MessageLabel/FaithParticles
+@onready var reputation_particles = $MarginContainer/VBoxContainer/MessageLabel/ReputationParticles
+
+# Label settings for messages
+var message_success_settings: LabelSettings
+var message_failure_settings: LabelSettings
 
 # Timers
 var mission_spawn_timer: float = 0.0
@@ -133,6 +146,11 @@ func _ready():
 	# Start with 3 random gods
 	for i in range(3):
 		add_random_god()
+
+	# Initialize message label settings
+	message_success_settings = message_label.label_settings.duplicate()
+	message_failure_settings = message_label.label_settings.duplicate()
+	message_failure_settings.font_color = Color(1, 0.3, 0.3, 1)
 
 	update_ui()
 	setup_upgrades()
@@ -178,6 +196,9 @@ func _process(delta):
 	update_level_up_button()
 	update_fire_god_button()
 	update_upgrade_buttons()
+
+	# Check for particle triggers
+	check_particle_triggers()
 
 	update_ui()
 
@@ -360,6 +381,67 @@ func update_ui():
 	if gods_title_label:
 		gods_title_label.text = "Available Gods (%d/%d)" % [all_gods.size(), god_slots]
 
+func check_particle_triggers():
+	# Trigger faith particles if faith increased
+	if faith > prev_faith:
+		if faith_particles:
+			faith_particles.emitting = true
+
+	# Trigger reputation particles if reputation increased
+	if reputation > prev_reputation:
+		if reputation_particles:
+			reputation_particles.emitting = true
+
+	# Update previous values
+	prev_faith = faith
+	prev_reputation = reputation
+
+func create_styled_button() -> Button:
+	var button = Button.new()
+	button.custom_minimum_size = Vector2(230, 100)
+
+	# Create StyleBoxTexture for the button background
+	var style_normal = StyleBoxTexture.new()
+	style_normal.texture = UPGRADE_SLATE_TEXTURE
+	style_normal.texture_margin_left = 10
+	style_normal.texture_margin_top = 10
+	style_normal.texture_margin_right = 10
+	style_normal.texture_margin_bottom = 10
+	style_normal.content_margin_left = 35
+	style_normal.content_margin_top = 15
+	style_normal.content_margin_right = 35
+	style_normal.content_margin_bottom = 15
+
+	var style_hover = StyleBoxTexture.new()
+	style_hover.texture = UPGRADE_SLATE_TEXTURE
+	style_hover.texture_margin_left = 10
+	style_hover.texture_margin_top = 10
+	style_hover.texture_margin_right = 10
+	style_hover.texture_margin_bottom = 10
+	style_hover.content_margin_left = 35
+	style_hover.content_margin_top = 15
+	style_hover.content_margin_right = 35
+	style_hover.content_margin_bottom = 15
+	style_hover.modulate_color = Color(1.2, 1.2, 1.2, 1.0)
+
+	var style_pressed = StyleBoxTexture.new()
+	style_pressed.texture = UPGRADE_SLATE_TEXTURE
+	style_pressed.texture_margin_left = 10
+	style_pressed.texture_margin_top = 10
+	style_pressed.texture_margin_right = 10
+	style_pressed.texture_margin_bottom = 10
+	style_pressed.content_margin_left = 35
+	style_pressed.content_margin_top = 15
+	style_pressed.content_margin_right = 35
+	style_pressed.content_margin_bottom = 15
+	style_pressed.modulate_color = Color(0.8, 0.8, 0.8, 1.0)
+
+	button.add_theme_stylebox_override("normal", style_normal)
+	button.add_theme_stylebox_override("hover", style_hover)
+	button.add_theme_stylebox_override("pressed", style_pressed)
+
+	return button
+
 func setup_upgrades():
 	add_upgrade("BuyGodButton", "Buy Random God", 500, func(): return buy_random_god())
 	add_dynamic_upgrade("BuySlotButton", "Buy God Slot", func(): return buy_god_slot())
@@ -368,7 +450,7 @@ func setup_upgrades():
 	add_level_up_button()
 
 func add_upgrade(button_name: String, upgrade_name: String, cost: int, callback: Callable):
-	var upgrade = Button.new()
+	var upgrade = create_styled_button()
 	upgrade.name = button_name
 	upgrade.text = "%s (%d Faith)" % [upgrade_name, cost]
 	upgrade.pressed.connect(func():
@@ -379,7 +461,7 @@ func add_upgrade(button_name: String, upgrade_name: String, cost: int, callback:
 	upgrades_container.add_child(upgrade)
 
 func add_dynamic_upgrade(button_name: String, upgrade_name: String, callback: Callable):
-	var upgrade = Button.new()
+	var upgrade = create_styled_button()
 	upgrade.name = button_name
 	upgrade.text = upgrade_name
 	upgrade.pressed.connect(func():
@@ -456,7 +538,7 @@ func can_level_up() -> bool:
 	return current_level < 10 and reputation >= 5.0
 
 func add_level_up_button():
-	var level_up_button = Button.new()
+	var level_up_button = create_styled_button()
 	level_up_button.name = "LevelUpButton"
 
 	# Update button in _process since it needs to check reputation
@@ -630,7 +712,14 @@ func process_message_queue(delta: float):
 		# Show next message
 		var next_message = message_queue.pop_front()
 		message_label.text = next_message["text"]
-		message_label.add_theme_color_override("font_color", next_message["color"])
+
+		# Apply appropriate label settings based on message type
+		# Red color (1.0, 0.2, 0.2) means failure, gold means success
+		if next_message["color"].r > 0.9 and next_message["color"].g < 0.3:
+			message_label.label_settings = message_failure_settings
+		else:
+			message_label.label_settings = message_success_settings
+
 		is_showing_message = true
 		current_message_timer = 0.0
 

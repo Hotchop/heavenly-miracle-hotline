@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://d1gok7hql0aiu"]
+[gd_scene load_steps=15 format=3 uid="uid://d1gok7hql0aiu"]
 
 [ext_resource type="Script" uid="uid://b7y6410y14ey6" path="res://Main.gd" id="1_1"]
 [ext_resource type="Texture2D" uid="uid://cv4w2e5tme4dr" path="res://assets/bg.png" id="2_bg"]
@@ -7,6 +7,7 @@
 [ext_resource type="AudioStream" uid="uid://ipbrywefobhf" path="res://assets/audio/Olympus Ascent.mp3" id="5_music"]
 [ext_resource type="Texture2D" uid="uid://c6o6lfg5s7oen" path="res://assets/reputation.png" id="6_reputation"]
 [ext_resource type="Texture2D" uid="uid://cpgknpg5fojy" path="res://assets/missions.png" id="7_missions"]
+[ext_resource type="Texture2D" uid="uid://ck6v2job8n8ju" path="res://assets/upgrades.png" id="8_upgrades"]
 
 [sub_resource type="SystemFont" id="SystemFont_fos0i"]
 
@@ -24,6 +25,32 @@ shadow_offset = Vector2(1.11, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_transparent"]
 bg_color = Color(1, 1, 1, 0)
 draw_center = false
+
+[sub_resource type="Gradient" id="Gradient_particles"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_message_success"]
+line_spacing = 1.96
+font = SubResource("SystemFont_fos0i")
+font_size = 25
+font_color = Color(0.9764706, 0.9490196, 0.654902, 1)
+outline_size = 8
+outline_color = Color(0.69803923, 0.35686275, 0.20784314, 1)
+shadow_size = 16
+shadow_color = Color(0, 0, 0, 0.3529412)
+shadow_offset = Vector2(1.11, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_message_failure"]
+line_spacing = 1.96
+font = SubResource("SystemFont_fos0i")
+font_size = 25
+font_color = Color(1, 0.3, 0.3, 1)
+outline_size = 8
+outline_color = Color(0.69803923, 0.35686275, 0.20784314, 1)
+shadow_size = 16
+shadow_color = Color(0, 0, 0, 0.3529412)
+shadow_offset = Vector2(1.11, 1)
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -66,25 +93,26 @@ custom_minimum_size = Vector2(0, 62.285)
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="FaithContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="LeftContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 20
+
+[node name="FaithContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar/LeftContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="FaithIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/FaithContainer"]
+[node name="FaithIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/LeftContainer/FaithContainer"]
 custom_minimum_size = Vector2(71.04, 32)
 layout_mode = 2
 texture = ExtResource("4_faith")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="FaithLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/FaithContainer"]
+[node name="FaithLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/LeftContainer/FaithContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Faith: 1000"
-
-[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/TopBar"]
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
 layout_mode = 2
@@ -93,27 +121,29 @@ text = "HEAVENLY MIRACLE HOTLINE"
 label_settings = SubResource("LabelSettings_3dxm6")
 horizontal_alignment = 1
 
-[node name="Spacer2" type="Control" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="RightContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 20
+alignment = 2
 
-[node name="ReputationContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="ReputationContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar/RightContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ReputationIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/ReputationContainer"]
+[node name="ReputationIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/RightContainer/ReputationContainer"]
 custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
 texture = ExtResource("6_reputation")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="ReputationLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/ReputationContainer"]
+[node name="ReputationLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/RightContainer/ReputationContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Reputation: 2.5/5.0"
 
-[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="LevelLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/RightContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Level: 1 (Intern)"
@@ -124,39 +154,34 @@ size_flags_vertical = 3
 theme_override_constants/separation = 15
 
 [node name="UpgradesPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_transparent")
+
+[node name="UpgradesBackground" type="TextureRect" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel"]
+layout_mode = 2
+texture = ExtResource("8_upgrades")
+expand_mode = 1
+stretch_mode = 4
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 5
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Upgrades"
-horizontal_alignment = 1
-
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-horizontal_scroll_mode = 0
-vertical_scroll_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer/ScrollContainer"]
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 150.5)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 5
 
 [node name="CenterPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_transparent")
 
 [node name="CenterImage" type="TextureRect" parent="MarginContainer/VBoxContainer/MainContent/CenterPanel"]
 layout_mode = 2
 texture = ExtResource("3_character")
-expand_mode = 1
+expand_mode = 2
 stretch_mode = 5
 
 [node name="MissionsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent"]
@@ -183,7 +208,13 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_right = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -196,9 +227,45 @@ size_flags_horizontal = 3
 
 [node name="MessageLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
+label_settings = SubResource("LabelSettings_message_success")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="FaithParticles" type="CPUParticles2D" parent="MarginContainer/VBoxContainer/MessageLabel"]
+position = Vector2(960, 10)
+emitting = false
+amount = 5
+texture = ExtResource("4_faith")
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 200)
+initial_velocity_min = 80.0
+initial_velocity_max = 150.0
+angular_velocity_min = -55.1
+angular_velocity_max = 34.02
+linear_accel_max = 6.3
+scale_amount_min = 0.04
+scale_amount_max = 0.06
+color_ramp = SubResource("Gradient_particles")
+
+[node name="ReputationParticles" type="CPUParticles2D" parent="MarginContainer/VBoxContainer/MessageLabel"]
+position = Vector2(960, 10)
+emitting = false
+amount = 5
+texture = ExtResource("6_reputation")
+one_shot = true
+explosiveness = 1.0
+direction = Vector2(0, -1)
+gravity = Vector2(0, 200)
+initial_velocity_min = 80.0
+initial_velocity_max = 150.0
+angular_velocity_min = -55.1
+angular_velocity_max = 34.02
+linear_accel_max = 6.3
+scale_amount_min = 0.04
+scale_amount_max = 0.06
+color_ramp = SubResource("Gradient_particles")
 
 [node name="ButtonsBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2

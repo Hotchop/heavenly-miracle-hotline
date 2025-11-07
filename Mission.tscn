@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Mission.gd" id="1_1"]
 
 [node name="Mission" type="PanelContainer"]
-custom_minimum_size = Vector2(280, 0)
+custom_minimum_size = Vector2(240, 0)
 script = ExtResource("1_1")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
