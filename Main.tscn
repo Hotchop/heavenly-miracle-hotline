@@ -1,9 +1,29 @@
-[gd_scene load_steps=5 format=3 uid="uid://d1gok7hql0aiu"]
+[gd_scene load_steps=11 format=3 uid="uid://d1gok7hql0aiu"]
 
 [ext_resource type="Script" uid="uid://b7y6410y14ey6" path="res://Main.gd" id="1_1"]
-[ext_resource type="Texture2D" path="res://assets/bg.png" id="2_bg"]
-[ext_resource type="Texture2D" path="res://assets/character.png" id="3_character"]
-[ext_resource type="Texture2D" path="res://assets/faith.png" id="4_faith"]
+[ext_resource type="Texture2D" uid="uid://cv4w2e5tme4dr" path="res://assets/bg.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://cpy7hmtl45y32" path="res://assets/character.png" id="3_character"]
+[ext_resource type="Texture2D" uid="uid://ycoyx1wbiuwi" path="res://assets/faith.png" id="4_faith"]
+[ext_resource type="AudioStream" uid="uid://ipbrywefobhf" path="res://assets/audio/Olympus Ascent.mp3" id="5_music"]
+[ext_resource type="Texture2D" uid="uid://c6o6lfg5s7oen" path="res://assets/reputation.png" id="6_reputation"]
+[ext_resource type="Texture2D" uid="uid://cpgknpg5fojy" path="res://assets/missions.png" id="7_missions"]
+
+[sub_resource type="SystemFont" id="SystemFont_fos0i"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_3dxm6"]
+line_spacing = 3.925
+font = SubResource("SystemFont_fos0i")
+font_size = 50
+font_color = Color(0.9764706, 0.9490196, 0.654902, 1)
+outline_size = 15
+outline_color = Color(0.69803923, 0.35686275, 0.20784314, 1)
+shadow_size = 31
+shadow_color = Color(0, 0, 0, 0.3529412)
+shadow_offset = Vector2(1.11, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_transparent"]
+bg_color = Color(1, 1, 1, 0)
+draw_center = false
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -42,6 +62,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="TopBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 62.285)
 layout_mode = 2
 theme_override_constants/separation = 20
 
@@ -50,7 +71,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="FaithIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/FaithContainer"]
-custom_minimum_size = Vector2(32, 32)
+custom_minimum_size = Vector2(71.04, 32)
 layout_mode = 2
 texture = ExtResource("4_faith")
 expand_mode = 1
@@ -69,13 +90,25 @@ size_flags_horizontal = 3
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "HEAVENLY MIRACLE HOTLINE"
+label_settings = SubResource("LabelSettings_3dxm6")
 horizontal_alignment = 1
 
 [node name="Spacer2" type="Control" parent="MarginContainer/VBoxContainer/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ReputationLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar"]
+[node name="ReputationContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ReputationIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/TopBar/ReputationContainer"]
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+texture = ExtResource("6_reputation")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ReputationLabel" type="Label" parent="MarginContainer/VBoxContainer/TopBar/ReputationContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Reputation: 2.5/5.0"
@@ -129,16 +162,22 @@ stretch_mode = 5
 [node name="MissionsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent"]
 custom_minimum_size = Vector2(300, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_transparent")
+
+[node name="MissionsBackground" type="TextureRect" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel"]
+layout_mode = 2
+texture = ExtResource("7_missions")
+expand_mode = 3
+stretch_mode = 6
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer"]
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 163.795)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Missions"
-horizontal_alignment = 1
+size_flags_horizontal = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer"]
 layout_mode = 2
@@ -148,12 +187,16 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 5
+theme_override_constants/separation = 4
+
+[node name="Spacer2" type="Control" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 112.785)
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="MessageLabel" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -173,6 +216,19 @@ size_flags_horizontal = 3
 [node name="HelpButton" type="Button" parent="MarginContainer/VBoxContainer/ButtonsBar"]
 layout_mode = 2
 text = "How to Play"
+
+[node name="VolumeLabel" type="Label" parent="MarginContainer/VBoxContainer/ButtonsBar"]
+layout_mode = 2
+text = "Volume:"
+
+[node name="VolumeSlider" type="HSlider" parent="MarginContainer/VBoxContainer/ButtonsBar"]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+min_value = -40.0
+max_value = 0.0
+value = -30.0
+tick_count = 5
+ticks_on_borders = true
 
 [node name="GodsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 150)
@@ -223,3 +279,7 @@ vertical_scroll_mode = 0
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_music")
+autoplay = true

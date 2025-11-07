@@ -93,7 +93,7 @@ var mission_names: Array = [
 
 # UI References
 @onready var faith_label = $MarginContainer/VBoxContainer/TopBar/FaithContainer/FaithLabel
-@onready var reputation_label = $MarginContainer/VBoxContainer/TopBar/ReputationLabel
+@onready var reputation_label = $MarginContainer/VBoxContainer/TopBar/ReputationContainer/ReputationLabel
 @onready var level_label = $MarginContainer/VBoxContainer/TopBar/LevelLabel
 @onready var missions_container = $MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer/VBoxContainer
 @onready var gods_container = $MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/ScrollContainer/HBoxContainer
@@ -106,6 +106,8 @@ var mission_names: Array = [
 @onready var fire_god_button = $MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/SortButtons/FireGodButton
 @onready var message_label = $MarginContainer/VBoxContainer/MessageLabel
 @onready var gods_title_label = $MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/Label
+@onready var volume_slider = $MarginContainer/VBoxContainer/ButtonsBar/VolumeSlider
+@onready var music_player = $MusicPlayer
 
 # Timers
 var mission_spawn_timer: float = 0.0
@@ -142,6 +144,11 @@ func _ready():
 	sort_spd_button.pressed.connect(func(): sort_gods_by("speed"))
 	sort_int_button.pressed.connect(func(): sort_gods_by("intelligence"))
 	fire_god_button.pressed.connect(_on_fire_god_pressed)
+	volume_slider.value_changed.connect(_on_volume_changed)
+
+	# Setup music
+	music_player.finished.connect(_on_music_finished)
+	_on_volume_changed(volume_slider.value)
 
 func _process(delta):
 	# Spawn missions randomly
@@ -672,3 +679,10 @@ func _on_fire_god_pressed():
 
 	add_child(popup)
 	popup.popup_centered()
+
+func _on_volume_changed(value: float):
+	AudioServer.set_bus_volume_db(AudioServer.get_bus_index("Master"), value)
+
+func _on_music_finished():
+	# Loop the music
+	music_player.play()

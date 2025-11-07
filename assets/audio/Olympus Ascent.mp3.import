@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://ipbrywefobhf"
+path="res://.godot/imported/Olympus Ascent.mp3-6d216d9f486924f9d30b9ad09ab4a19b.mp3str"
+
+[deps]
+
+source_file="res://assets/audio/Olympus Ascent.mp3"
+dest_files=["res://.godot/imported/Olympus Ascent.mp3-6d216d9f486924f9d30b9ad09ab4a19b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
