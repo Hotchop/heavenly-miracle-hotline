@@ -1,4 +1,4 @@
-# playsaurus-game-jam
+# Heavenly Miracle Hotline
 Hotchop and MahhLong 2025 Playsaurus Game Jam Project
 
 So we’re going for Heavenly Miracle Hotline, but instead of generic angels, it’s staffed by a chaotic pantheon of minor Greek gods — all the forgotten or overly specific deities who’ve been repurposed into call center agents for modern prayers.
