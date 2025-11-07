@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bh8r3yxqnqx7k"]
+[gd_scene load_steps=2 format=3 uid="uid://d1gok7hql0aiu"]
 
-[ext_resource type="Script" path="res://Main.gd" id="1_1"]
+[ext_resource type="Script" uid="uid://b7y6410y14ey6" path="res://Main.gd" id="1_1"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -75,6 +75,7 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer"]
 layout_mode = 2
@@ -82,13 +83,13 @@ theme_override_font_sizes/font_size = 20
 text = "Upgrades"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 vertical_scroll_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -98,25 +99,30 @@ theme_override_constants/separation = 5
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="CenterLabel" type="Label" parent="MarginContainer/VBoxContainer/MainContent/CenterPanel"]
+[node name="CenterImage" type="ColorRect" parent="MarginContainer/VBoxContainer/MainContent/CenterPanel"]
 layout_mode = 2
-size_flags_vertical = 1
-theme_override_font_sizes/font_size = 18
-text = "Welcome to the Heavenly Miracle Hotline!
+color = Color(0.4, 0.6, 0.9, 1)
 
-Select a mission on the right, then select a god at the bottom to assign them.
-
-Gods have three attributes:
-- Strength (Red)
-- Speed (Blue)
-- Intelligence (Green)
-
-Match the god's strong attribute to the mission's recommended stat for better success rates!
-
-Complete missions to earn Faith. Use Faith to buy upgrades on the left!"
+[node name="PlaceholderLabel" type="Label" parent="MarginContainer/VBoxContainer/MainContent/CenterPanel/CenterImage"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -50.0
+offset_right = 100.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "☁️
+HEAVENLY
+HOTLINE
+☁️"
 horizontal_alignment = 1
 vertical_alignment = 1
-autowrap_mode = 3
 
 [node name="MissionsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/MainContent"]
 custom_minimum_size = Vector2(300, 0)
@@ -124,6 +130,7 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer"]
 layout_mode = 2
@@ -131,15 +138,32 @@ theme_override_font_sizes/font_size = 20
 text = "Missions"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 5
+
+[node name="ButtonsBar" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="AutoPlayButton" type="Button" parent="MarginContainer/VBoxContainer/ButtonsBar"]
+layout_mode = 2
+toggle_mode = true
+text = "Auto Play: OFF"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/ButtonsBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HelpButton" type="Button" parent="MarginContainer/VBoxContainer/ButtonsBar"]
+layout_mode = 2
+text = "How to Play"
 
 [node name="GodsPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 150)
@@ -147,6 +171,7 @@ layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/GodsPanel"]
 layout_mode = 2
+theme_override_constants/separation = 10
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer/GodsPanel/VBoxContainer"]
 layout_mode = 2
@@ -154,13 +179,13 @@ theme_override_font_sizes/font_size = 20
 text = "Available Gods"
 horizontal_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/GodsPanel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBoxContainer/GodsPanel/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 2
 vertical_scroll_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GodsPanel/ScrollContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/ScrollContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 10

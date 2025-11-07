@@ -78,9 +78,11 @@ var mission_names: Array = [
 # UI References
 @onready var faith_label = $MarginContainer/VBoxContainer/TopBar/FaithLabel
 @onready var reputation_label = $MarginContainer/VBoxContainer/TopBar/ReputationLabel
-@onready var missions_container = $MarginContainer/VBoxContainer/MainContent/MissionsPanel/ScrollContainer/VBoxContainer
-@onready var gods_container = $MarginContainer/VBoxContainer/GodsPanel/ScrollContainer/HBoxContainer
-@onready var upgrades_container = $MarginContainer/VBoxContainer/MainContent/UpgradesPanel/ScrollContainer/VBoxContainer
+@onready var missions_container = $MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer/VBoxContainer
+@onready var gods_container = $MarginContainer/VBoxContainer/GodsPanel/VBoxContainer/ScrollContainer/HBoxContainer
+@onready var upgrades_container = $MarginContainer/VBoxContainer/MainContent/UpgradesPanel/VBoxContainer/ScrollContainer/VBoxContainer
+@onready var auto_play_button = $MarginContainer/VBoxContainer/ButtonsBar/AutoPlayButton
+@onready var help_button = $MarginContainer/VBoxContainer/ButtonsBar/HelpButton
 
 # Timers
 var mission_spawn_timer: float = 0.0
@@ -90,6 +92,9 @@ var mission_spawn_interval: float = 8.0  # Spawn missions every 8 seconds
 var selected_mission = null
 var selected_god = null
 
+# Auto play
+var auto_play_enabled: bool = false
+
 func _ready():
 	randomize()
 	# Start with 3 random gods
@@ -98,6 +103,10 @@ func _ready():
 
 	update_ui()
 	setup_upgrades()
+
+	# Connect buttons
+	auto_play_button.toggled.connect(_on_auto_play_toggled)
+	help_button.pressed.connect(_on_help_pressed)
 
 func _process(delta):
 	# Spawn missions randomly
@@ -132,7 +141,7 @@ func create_random_mission():
 	var recommended_stat = ["strength", "speed", "intelligence"][randi() % 3]
 	var reward = difficulty * 100 * randf_range(0.8, 1.5)
 	var completion_time = difficulty * 5.0 + randf_range(2.0, 8.0)
-	var threshold = difficulty * 50 + randf_range(20, 80)
+	var threshold = difficulty * 25.0 + randf_range(5.0, 20.0)  # 1-star: 30-45, 5-star: 130-145
 
 	mission.setup(mission_name, difficulty, recommended_stat, int(reward), completion_time, threshold)
 	mission.mission_clicked.connect(_on_mission_clicked)
@@ -191,6 +200,12 @@ func assign_mission():
 	if not selected_mission or not selected_god:
 		return
 
+	print("=== ASSIGNING MISSION ===")
+	print("  Mission: ", selected_mission.mission_name)
+	print("  God: ", selected_god.god_name)
+	print("  Reward: ", selected_mission.reward)
+	print("  Completion time: ", selected_mission.completion_time)
+
 	# Remove from available missions
 	available_missions.erase(selected_mission)
 	active_missions.append(selected_mission)
@@ -215,24 +230,45 @@ func _on_mission_expired(mission):
 	reputation = max(0.0, reputation - 0.1)
 
 func _on_mission_completed(mission, god, success):
+	print("=== _on_mission_completed CALLED ===")
+	print("  Mission: ", mission.mission_name)
+	print("  God: ", god.god_name)
+	print("  Success: ", success)
+	print("  Before - Faith: ", faith, " | Reputation: ", reputation)
+
 	active_missions.erase(mission)
 
 	if success:
 		var actual_reward = int(mission.reward * faith_multiplier)
+		print("  Reward calculation: ", mission.reward, " * ", faith_multiplier, " = ", actual_reward)
+
+		var old_faith = faith
+		var old_reputation = reputation
+
 		faith += actual_reward
 		reputation = min(5.0, reputation + 0.05)
+
+		print("  After - Faith: ", faith, " (gained: ", faith - old_faith, ")")
+		print("  After - Reputation: ", reputation, " (gained: ", reputation - old_reputation, ")")
+		print("  FAITH GAINED: +", actual_reward, " (Total: ", faith, ")")
 	else:
+		var old_reputation = reputation
 		reputation = max(0.0, reputation - 0.05)
+		print("  MISSION FAILED - No faith gained")
+		print("  After - Reputation: ", reputation, " (lost: ", old_reputation - reputation, ")")
 
 	# Free the god
 	god.set_busy(false)
 
 	# Remove mission
 	mission.queue_free()
+	print("=== END _on_mission_completed ===")
 
 func update_ui():
-	faith_label.text = "Faith: %d" % faith
-	reputation_label.text = "Reputation: %.1f/5.0" % reputation
+	if faith_label:
+		faith_label.text = "Faith: %d" % faith
+	if reputation_label:
+		reputation_label.text = "Reputation: %.1f/5.0" % reputation
 
 func setup_upgrades():
 	add_upgrade("Buy Random God", 500, func(): return buy_random_god())
@@ -266,3 +302,38 @@ func buy_success_bonus() -> bool:
 func buy_faith_multiplier() -> bool:
 	faith_multiplier += 0.1
 	return true
+
+func _on_auto_play_toggled(button_pressed: bool):
+	auto_play_enabled = button_pressed
+	if button_pressed:
+		auto_play_button.text = "Auto Play: ON"
+	else:
+		auto_play_button.text = "Auto Play: OFF"
+
+func _on_help_pressed():
+	# Create help popup
+	var popup = AcceptDialog.new()
+	popup.title = "How to Play"
+	popup.dialog_text = """Welcome to the Heavenly Miracle Hotline!
+
+HOW TO PLAY:
+• Select a mission on the right
+• Then select a god at the bottom to assign them
+• Wait for the mission to complete
+
+GODS:
+Gods have three attributes:
+• Strength (Red)
+• Speed (Blue)
+• Intelligence (Green)
+
+Match the god's strong attribute to the mission's recommended stat for better success rates!
+
+CURRENCY:
+• Complete missions to earn Faith
+• Use Faith to buy upgrades on the left
+• Maintain your reputation to keep the hotline running!"""
+
+	popup.min_size = Vector2(400, 300)
+	add_child(popup)
+	popup.popup_centered()

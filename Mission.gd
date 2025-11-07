@@ -77,6 +77,7 @@ func update_timer(delta: float):
 	if not is_active:
 		expiry_timer -= delta
 		if expiry_timer <= 0:
+			print("Mission EXPIRED: ", mission_name)
 			mission_expired.emit(self)
 		update_display()
 
@@ -114,6 +115,12 @@ func complete_mission():
 	var result = god_stat_value * multiplier
 
 	var success = result >= threshold
+
+	print("Mission COMPLETED: ", mission_name)
+	print("  God stat (", recommended_stat, "): ", god_stat_value)
+	print("  Multiplier: ", multiplier)
+	print("  Result: ", result, " vs Threshold: ", threshold)
+	print("  SUCCESS: ", success, " | Reward: ", reward)
 
 	mission_completed.emit(self, assigned_god, success)
 
