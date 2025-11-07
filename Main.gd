@@ -92,7 +92,7 @@ var mission_names: Array = [
 ]
 
 # UI References
-@onready var faith_label = $MarginContainer/VBoxContainer/TopBar/FaithLabel
+@onready var faith_label = $MarginContainer/VBoxContainer/TopBar/FaithContainer/FaithLabel
 @onready var reputation_label = $MarginContainer/VBoxContainer/TopBar/ReputationLabel
 @onready var level_label = $MarginContainer/VBoxContainer/TopBar/LevelLabel
 @onready var missions_container = $MarginContainer/VBoxContainer/MainContent/MissionsPanel/VBoxContainer/ScrollContainer/VBoxContainer
