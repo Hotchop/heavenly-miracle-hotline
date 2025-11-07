@@ -1,4 +1,4 @@
-extends PanelContainer
+extends TextureRect
 
 signal god_clicked(god)
 
@@ -9,9 +9,8 @@ var intelligence: int
 var is_busy: bool = false
 var is_selected: bool = false
 
-@onready var icon_label = $MarginContainer/VBoxContainer/IconLabel
-@onready var name_label = $MarginContainer/VBoxContainer/NameLabel
-@onready var stats_label = $MarginContainer/VBoxContainer/StatsLabel
+@onready var name_label = $NameLabel
+@onready var stats_label = $StatsLabel
 
 func setup(p_name: String, p_strength: int, p_speed: int, p_intelligence: int):
 	god_name = p_name
@@ -20,56 +19,40 @@ func setup(p_name: String, p_strength: int, p_speed: int, p_intelligence: int):
 	intelligence = p_intelligence
 
 func _ready():
-	if icon_label:
+	if name_label:
 		update_display()
 
 	# Make it clickable
 	gui_input.connect(_on_gui_input)
 
 func update_display():
-	# Simple icon (just use first letter or emoji)
-	icon_label.text = "👤"  # Generic person icon
 	name_label.text = god_name
 
-	# Color-coded stats with lighter colors and bold
+	# Color-coded stats: Strength (red), Intelligence (green), Speed (blue)
 	stats_label.clear()
 	stats_label.push_bold()
-	stats_label.push_color(Color(1.0, 0.4, 0.4))  # Light red
-	stats_label.add_text("STR: %d  " % strength)
+	stats_label.push_color(Color(1.0, 0.4, 0.4))  # Light red for Strength
+	stats_label.add_text("%d " % strength)
 	stats_label.pop()
 	stats_label.pop()
 	stats_label.push_bold()
-	stats_label.push_color(Color(0.4, 0.6, 1.0))  # Light blue
-	stats_label.add_text("SPD: %d  " % speed)
+	stats_label.push_color(Color(0.4, 1.0, 0.4))  # Light green for Intelligence
+	stats_label.add_text("%d " % intelligence)
 	stats_label.pop()
 	stats_label.pop()
 	stats_label.push_bold()
-	stats_label.push_color(Color(0.4, 1.0, 0.4))  # Light green
-	stats_label.add_text("INT: %d" % intelligence)
+	stats_label.push_color(Color(0.4, 0.6, 1.0))  # Light blue for Speed
+	stats_label.add_text("%d" % speed)
 	stats_label.pop()
 	stats_label.pop()
 
 	if is_busy:
 		name_label.text = "%s (BUSY)" % god_name
 		modulate = Color(0.5, 0.5, 0.5, 1.0)  # Gray out when busy
+	elif is_selected:
+		modulate = Color(1.2, 1.2, 0.8, 1.0)  # Highlight when selected
 	else:
 		modulate = Color(1.0, 1.0, 1.0, 1.0)
-
-	# Visual feedback for selection
-	if is_selected and not is_busy:
-		add_theme_stylebox_override("panel", get_selected_style())
-	else:
-		remove_theme_stylebox_override("panel")
-
-func get_selected_style():
-	var style = StyleBoxFlat.new()
-	style.bg_color = Color(0.3, 0.5, 0.8, 1.0)
-	style.border_color = Color(1.0, 1.0, 0.0, 1.0)
-	style.border_width_left = 3
-	style.border_width_right = 3
-	style.border_width_top = 3
-	style.border_width_bottom = 3
-	return style
 
 func set_busy(busy: bool):
 	is_busy = busy

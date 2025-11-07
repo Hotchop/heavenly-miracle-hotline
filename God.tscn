@@ -1,38 +1,43 @@
-[gd_scene load_steps=2 format=3 uid="uid://d8r3yxqnqx7k"]
+[gd_scene load_steps=4 format=3 uid="uid://d8r3yxqnqx7k"]
 
-[ext_resource type="Script" path="res://God.gd" id="1_1"]
+[ext_resource type="Script" uid="uid://dpumof1m88k5a" path="res://God.gd" id="1_1"]
+[ext_resource type="Texture2D" uid="uid://ctrgv1bu55l5k" path="res://assets/card.png" id="2_card"]
 
-[node name="God" type="PanelContainer"]
-custom_minimum_size = Vector2(150, 0)
+[sub_resource type="LabelSettings" id="LabelSettings_5fc8n"]
+line_spacing = 0.15
+font_size = 10
+outline_color = Color(0, 0, 0, 1)
+shadow_color = Color(0, 0, 0, 0.5647059)
+
+[node name="God" type="TextureRect"]
+custom_minimum_size = Vector2(225, 150)
+offset_right = 200.0
+offset_bottom = 150.0
+scale = Vector2(0.43414146, 0.40168765)
+texture = ExtResource("2_card")
+expand_mode = 2
 script = ExtResource("1_1")
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
-layout_mode = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 5
-
-[node name="IconLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "👤"
-horizontal_alignment = 1
-
-[node name="NameLabel" type="Label" parent="MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 14
+[node name="NameLabel" type="Label" parent="."]
+layout_mode = 0
+offset_left = 96.74266
+offset_top = 49.78993
+offset_right = 211.91249
+offset_bottom = 74.68489
+theme_override_font_sizes/font_size = 18
 text = "God Name"
+label_settings = SubResource("LabelSettings_5fc8n")
 horizontal_alignment = 1
+vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="StatsLabel" type="RichTextLabel" parent="MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
+[node name="StatsLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 119.77663
+offset_top = 74.6849
+offset_right = 186.57513
+offset_bottom = 97.6849
 bbcode_enabled = true
-text = "STR: 50 SPD: 50 INT: 50"
+text = "50 50 50"
 fit_content = true
+scroll_active = false

@@ -1,6 +1,7 @@
 extends Control
 
 # Preload textures for upgrades
+const UPGRADE_SLATE_BLOCKED_TEXTURE = preload("res://assets/slateLocked.png")
 const UPGRADE_SLATE_TEXTURE = preload("res://assets/upgradesSlates.png")
 
 # Game state
@@ -400,7 +401,7 @@ func create_styled_button() -> Button:
 	var button = Button.new()
 	button.custom_minimum_size = Vector2(230, 100)
 
-	# Create StyleBoxTexture for the button background
+	# NORMAL
 	var style_normal = StyleBoxTexture.new()
 	style_normal.texture = UPGRADE_SLATE_TEXTURE
 	style_normal.texture_margin_left = 10
@@ -412,6 +413,7 @@ func create_styled_button() -> Button:
 	style_normal.content_margin_right = 35
 	style_normal.content_margin_bottom = 15
 
+	# HOVER
 	var style_hover = StyleBoxTexture.new()
 	style_hover.texture = UPGRADE_SLATE_TEXTURE
 	style_hover.texture_margin_left = 10
@@ -424,6 +426,7 @@ func create_styled_button() -> Button:
 	style_hover.content_margin_bottom = 15
 	style_hover.modulate_color = Color(1.2, 1.2, 1.2, 1.0)
 
+	# PRESSED
 	var style_pressed = StyleBoxTexture.new()
 	style_pressed.texture = UPGRADE_SLATE_TEXTURE
 	style_pressed.texture_margin_left = 10
@@ -436,9 +439,24 @@ func create_styled_button() -> Button:
 	style_pressed.content_margin_bottom = 15
 	style_pressed.modulate_color = Color(0.8, 0.8, 0.8, 1.0)
 
+	# DISABLED
+	var style_disabled = StyleBoxTexture.new()
+	style_disabled.texture = UPGRADE_SLATE_BLOCKED_TEXTURE
+	style_disabled.texture_margin_left = 10
+	style_disabled.texture_margin_top = 10
+	style_disabled.texture_margin_right = 10
+	style_disabled.texture_margin_bottom = 10
+	style_disabled.content_margin_left = 35
+	style_disabled.content_margin_top = 15
+	style_disabled.content_margin_right = 35
+	style_disabled.content_margin_bottom = 15
+	# optional extra dim:
+	style_disabled.modulate_color = Color(0.7, 0.7, 0.7, 1.0)
+
 	button.add_theme_stylebox_override("normal", style_normal)
 	button.add_theme_stylebox_override("hover", style_hover)
 	button.add_theme_stylebox_override("pressed", style_pressed)
+	button.add_theme_stylebox_override("disabled", style_disabled)
 
 	return button
 

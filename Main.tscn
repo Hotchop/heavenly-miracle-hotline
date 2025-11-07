@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://d1gok7hql0aiu"]
+[gd_scene load_steps=14 format=3 uid="uid://d1gok7hql0aiu"]
 
 [ext_resource type="Script" uid="uid://b7y6410y14ey6" path="res://Main.gd" id="1_1"]
 [ext_resource type="Texture2D" uid="uid://cv4w2e5tme4dr" path="res://assets/bg.png" id="2_bg"]
@@ -26,10 +26,6 @@ shadow_offset = Vector2(1.11, 1)
 bg_color = Color(1, 1, 1, 0)
 draw_center = false
 
-[sub_resource type="Gradient" id="Gradient_particles"]
-offsets = PackedFloat32Array(0, 1)
-colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
-
 [sub_resource type="LabelSettings" id="LabelSettings_message_success"]
 line_spacing = 1.96
 font = SubResource("SystemFont_fos0i")
@@ -41,16 +37,8 @@ shadow_size = 16
 shadow_color = Color(0, 0, 0, 0.3529412)
 shadow_offset = Vector2(1.11, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_message_failure"]
-line_spacing = 1.96
-font = SubResource("SystemFont_fos0i")
-font_size = 25
-font_color = Color(1, 0.3, 0.3, 1)
-outline_size = 8
-outline_color = Color(0.69803923, 0.35686275, 0.20784314, 1)
-shadow_size = 16
-shadow_color = Color(0, 0, 0, 0.3529412)
-shadow_offset = Vector2(1.11, 1)
+[sub_resource type="Gradient" id="Gradient_particles"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [node name="Main" type="Control"]
 layout_mode = 3
